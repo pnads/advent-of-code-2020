@@ -40,7 +40,6 @@ Puzzle input: https://adventofcode.com/2020/day/1/input
 """
 import numpy as np
 
-
 input_file = 'input_files/input_day_01.txt'
 
 with open(input_file, 'r') as f:
@@ -50,9 +49,9 @@ numbers = np.array([int(num) for num in numbers])
 
 solution_1 = np.product(numbers[np.unique(np.where((numbers + numbers[:, None] == 2020)))])
 
-print(solution_1)
+print(f"Solution 1: {solution_1}")
 
-# Solution 1: 1010884.
+# Solution 1: 1010884
 
 
 """--- Part Two ---
@@ -68,6 +67,6 @@ In your expense report, what is the product of the three entries that sum to 202
 
 solution_2 = np.product(numbers[np.unique(np.where((numbers + numbers[:, None] + numbers[:, None, None] == 2020)))])
 
-print(solution_2)
+print(f"Solution 2: {solution_2}")
 
 # Solution 2: 253928438
