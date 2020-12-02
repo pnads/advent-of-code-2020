@@ -60,21 +60,18 @@ def main(part_number):
         print('Invalid part number.')
         return 
     
-    check_funcs = {
+    check_functions = {
         1: is_password_valid_1,
         2: is_password_valid_2
     }
 
     rules_passwords = get_rules_and_passwords()
 
-    valid_passwords = []
+    num_valid_passwords = 0
 
     for rule_password_tuple in rules_passwords:
-        rule, password = rule_password_tuple
-        if check_funcs[part_number](rule, password):
-            valid_passwords.append(password)
-
-    num_valid_passwords = len(valid_passwords)
+        if check_functions[part_number](*rule_password_tuple):
+            num_valid_passwords += 1
 
     print(f"---Part {part_number}---")
     print(f"Number of valid passwords: {num_valid_passwords}")
@@ -129,14 +126,13 @@ def is_password_valid_2(rule, password):
     """Check password according to supplied rule string.
     Rule defines a character and 2 positions in the passwords to check.
     Exactly ONE of these positions must contain the given letter.
-    Uses an XOR operation to do the comparison.
     """
     position_one, position_two, char = parse_rule(rule)
 
     in_position_one = password[position_one-1] == char
     in_position_two = password[position_two-1] == char
 
-    return in_position_one ^ in_position_two # XOR operation
+    return in_position_one != in_position_two
 
 
 if __name__ == "__main__":
