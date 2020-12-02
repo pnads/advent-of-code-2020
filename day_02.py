@@ -34,6 +34,30 @@ How many passwords are valid according to their policies?
 
 """
 
+def get_password_lines():
+    """Read and parse the input file and return a list of strings
+    containing a rule and a password.
+    EX: "1-5 x: amxkdisskf"
+    """
+    input_file = 'input_files/input_day_02.txt'
+
+    with open(input_file, 'r') as f:
+        password_lines = f.readlines()
+
+    password_lines = [line.rstrip("\n") for line in password_lines]
+
+    return password_lines
+
+def parse_rule(rule):
+    """Parse the rule string to return 2 integers and a character.
+    """
+    first_number, second_number = rule.split("-")
+    second_number, char = second_number.split(" ")
+
+    first_number = int(first_number)
+    second_number = int(second_number)
+
+    return first_number, second_number, char
 
 def check_password_part_1(password, rule):
     """Check password according to supplied rule string.
@@ -42,25 +66,16 @@ def check_password_part_1(password, rule):
     Returns True if number of occurrences in the password is within the range.
     Returns False otherwise.
     """
-    char_min, char_max = rule.split("-")
-    char_max, char = char_max.split(" ")
-    char_min = int(char_min)
-    char_max = int(char_max)
+    char_min, char_max, char = parse_rule(rule)
 
     num_occurrences = password.count(char)
 
     return char_min <= num_occurrences <= char_max
 
-
 def part_1():
     """Run Part 1 and print the number of valid passwords.
     """
-    input_file = 'input_files/input_day_02.txt'
-
-    with open(input_file, 'r') as f:
-        password_lines = f.readlines()
-
-    password_lines = [line.rstrip("\n") for line in password_lines]
+    password_lines = get_password_lines()
 
     valid_passwords = []
 
@@ -98,18 +113,13 @@ Given the same example list from above:
 How many passwords are valid according to the new interpretation of the policies?
 """
 
-
 def check_password_part_2(password, rule):
     """Check password according to supplied rule string.
     Rule defines a character and 2 positions in the passwords to check.
     Exactly ONE of these positions must contain the given letter.
     Uses an XOR operation to do the comparison.
     """
-    position_one, position_two = rule.split("-")
-    position_two, char = position_two.split(" ")
-
-    position_one = int(position_one)
-    position_two = int(position_two)
+    position_one, position_two, char = parse_rule(rule)
 
     in_position_one = password[position_one-1] == char
     in_position_two = password[position_two-1] == char
@@ -119,13 +129,8 @@ def check_password_part_2(password, rule):
 def part_2():
     """Run Part 2 and print the number of valid passwords.
     """
-    input_file = 'input_files/input_day_02.txt'
-
-    with open(input_file, 'r') as f:
-        password_lines = f.readlines()
-
-    password_lines = [line.rstrip("\n") for line in password_lines]
-
+    password_lines = get_password_lines()
+    
     valid_passwords = []
 
     for password_line in password_lines:
@@ -140,6 +145,6 @@ def part_2():
     print(f"Number of valid passwords: {num_valid_passwords}")
 
 
-if __name__=='__main__':
-    part_1()
-    part_2()
+# Run!
+part_1()
+part_2()
