@@ -32,66 +32,7 @@ policies.
 
 How many passwords are valid according to their policies?
 
-"""
-
-def get_password_lines():
-    """Read and parse the input file and return a list of strings
-    containing a rule and a password.
-    EX: "1-5 x: amxkdisskf"
-    """
-    input_file = 'input_files/input_day_02.txt'
-
-    with open(input_file, 'r') as f:
-        password_lines = f.readlines()
-
-    password_lines = [line.rstrip("\n") for line in password_lines]
-
-    return password_lines
-
-def parse_rule(rule):
-    """Parse the rule string to return 2 integers and a character.
-    """
-    first_number, second_number = rule.split("-")
-    second_number, char = second_number.split(" ")
-
-    first_number = int(first_number)
-    second_number = int(second_number)
-
-    return first_number, second_number, char
-
-def check_password_part_1(password, rule):
-    """Check password according to supplied rule string.
-    Rule defines a character and a minimum and maximum number of occurrences
-    of the character in the password.
-    Returns True if number of occurrences in the password is within the range.
-    Returns False otherwise.
-    """
-    char_min, char_max, char = parse_rule(rule)
-
-    num_occurrences = password.count(char)
-
-    return char_min <= num_occurrences <= char_max
-
-def part_1():
-    """Run Part 1 and print the number of valid passwords.
-    """
-    password_lines = get_password_lines()
-
-    valid_passwords = []
-
-    for password_line in password_lines:
-        rule, password = password_line.split(": ")
-
-        if check_password_part_1(password, rule):
-            valid_passwords.append(password)
-
-    num_valid_passwords = len(valid_passwords)
-
-    print("---Part 1---")
-    print(f"Number of valid passwords: {num_valid_passwords}")
-
-
-"""--- Part Two ---
+--- Part Two ---
 While it appears you validated the passwords correctly, they don't seem to be 
 what the Official Toboggan Corporate Authentication System is expecting.
 
@@ -113,7 +54,90 @@ Given the same example list from above:
 How many passwords are valid according to the new interpretation of the policies?
 """
 
-def check_password_part_2(password, rule):
+#------------------------------------------------------------------------------
+# MAIN FUNCTIONS
+#------------------------------------------------------------------------------
+
+def part_1():
+    """Run Part 1 and print the number of valid passwords.
+    """
+    rules_passwords = get_rules_and_passwords()
+
+    valid_passwords = []
+
+    for rule_password_tuple in rules_passwords:
+        rule, password = rule_password_tuple
+        if check_password_part_1(rule, password):
+            valid_passwords.append(password)
+
+    num_valid_passwords = len(valid_passwords)
+
+    print("---Part 1---")
+    print(f"Number of valid passwords: {num_valid_passwords}")
+
+def part_2():
+    """Run Part 2 and print the number of valid passwords.
+    """
+    rules_passwords = get_rules_and_passwords()
+
+    valid_passwords = []
+
+    for rule_password_tuple in rules_passwords:
+        rule, password = rule_password_tuple
+        if check_password_part_2(rule, password):
+            valid_passwords.append(password)
+
+    num_valid_passwords = len(valid_passwords)
+
+    print("---Part 2---")
+    print(f"Number of valid passwords: {num_valid_passwords}")
+
+    
+#------------------------------------------------------------------------------
+# HELPER FUNCTIONS
+#------------------------------------------------------------------------------
+
+def get_rules_and_passwords():
+    """Read and parse the input file and return a list of tuples
+    containing a rule and a password.
+    EX: ("1-5 x", "amxkdisskf")
+    """
+    input_file = 'input_files/input_day_02.txt'
+
+    with open(input_file, 'r') as f:
+        password_lines = [line.rstrip("\n") for line in f.readlines()]
+    
+    rules_passwords = []
+    for password_line in password_lines:
+        rules_passwords.append(password_line.split(": "))
+
+    return rules_passwords # List of tuples: (rule, password)
+
+def parse_rule(rule):
+    """Parse the rule string to return 2 integers and a character.
+    """
+    first_number, second_number = rule.split("-")
+    second_number, char = second_number.split(" ")
+
+    first_number = int(first_number)
+    second_number = int(second_number)
+
+    return first_number, second_number, char
+
+def check_password_part_1(rule, password):
+    """Check password according to supplied rule string.
+    Rule defines a character and a minimum and maximum number of occurrences
+    of the character in the password.
+    Returns True if number of occurrences in the password is within the range.
+    Returns False otherwise.
+    """
+    char_min, char_max, char = parse_rule(rule)
+
+    num_occurrences = password.count(char)
+
+    return char_min <= num_occurrences <= char_max
+
+def check_password_part_2(rule, password):
     """Check password according to supplied rule string.
     Rule defines a character and 2 positions in the passwords to check.
     Exactly ONE of these positions must contain the given letter.
@@ -126,25 +150,8 @@ def check_password_part_2(password, rule):
 
     return in_position_one ^ in_position_two # XOR operation
 
-def part_2():
-    """Run Part 2 and print the number of valid passwords.
-    """
-    password_lines = get_password_lines()
-    
-    valid_passwords = []
 
-    for password_line in password_lines:
-        rule, password = password_line.split(": ")
-
-        if check_password_part_2(password, rule):
-            valid_passwords.append(password)
-
-    num_valid_passwords = len(valid_passwords)
-
-    print("---Part 2---")
-    print(f"Number of valid passwords: {num_valid_passwords}")
-
-
-# Run!
-part_1()
-part_2()
+if __name__ == "__main__":
+    # Run!
+    part_1()
+    part_2()
