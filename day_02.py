@@ -35,8 +35,12 @@ How many passwords are valid according to their policies?
 """
 
 
-def check_password(password, rule):
-    """
+def check_password_part_1(password, rule):
+    """Check password according to supplied rule string.
+    Rule defines a character and a minimum and maximum number of occurrences
+    of the character in the password.
+    Returns True if number of occurrences in the password is within the range.
+    Returns False otherwise.
     """
     char_min, char_max = rule.split("-")
     char_max, char = char_max.split(" ")
@@ -49,7 +53,7 @@ def check_password(password, rule):
 
 
 def part_1():
-    """
+    """Run Part 1 and print the number of valid passwords.
     """
     input_file = 'input_files/input_day_02.txt'
 
@@ -63,12 +67,12 @@ def part_1():
     for password_line in password_lines:
         rule, password = password_line.split(": ")
 
-        if check_password(password, rule):
+        if check_password_part_1(password, rule):
             valid_passwords.append(password)
 
     num_valid_passwords = len(valid_passwords)
 
-    print(valid_passwords)
+    print("---Part 1---")
     print(f"Number of valid passwords: {num_valid_passwords}")
 
 
@@ -95,11 +99,47 @@ How many passwords are valid according to the new interpretation of the policies
 """
 
 
+def check_password_part_2(password, rule):
+    """Check password according to supplied rule string.
+    Rule defines a character and 2 positions in the passwords to check.
+    Exactly ONE of these positions must contain the given letter.
+    Uses an XOR operation to do the comparison.
+    """
+    position_one, position_two = rule.split("-")
+    position_two, char = position_two.split(" ")
 
+    position_one = int(position_one)
+    position_two = int(position_two)
 
+    in_position_one = password[position_one-1] == char
+    in_position_two = password[position_two-1] == char
 
+    return in_position_one ^ in_position_two # XOR operation
 
+def part_2():
+    """Run Part 2 and print the number of valid passwords.
+    """
+    input_file = 'input_files/input_day_02.txt'
+
+    with open(input_file, 'r') as f:
+        password_lines = f.readlines()
+
+    password_lines = [line.rstrip("\n") for line in password_lines]
+
+    valid_passwords = []
+
+    for password_line in password_lines:
+        rule, password = password_line.split(": ")
+
+        if check_password_part_2(password, rule):
+            valid_passwords.append(password)
+
+    num_valid_passwords = len(valid_passwords)
+
+    print("---Part 2---")
+    print(f"Number of valid passwords: {num_valid_passwords}")
 
 
 if __name__=='__main__':
     part_1()
+    part_2()
