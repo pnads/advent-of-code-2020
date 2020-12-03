@@ -74,6 +74,7 @@ with open('input_files/input_day_03.txt', 'r') as f:
 num_cols = len(tree_map[0])
 
 def part_1():
+    print('---Part 1---')
     step = 3
     pos = 0
     tree_count = 0
@@ -103,3 +104,32 @@ respectively; multiplied together, these produce the answer 336.
 What do you get if you multiply together the number of trees encountered on each 
 of the listed slopes?
 """
+def part_2():
+    print("---Part 2---")
+    slopes = [
+        (1, 1),
+        (3, 1),
+        (5, 1),
+        (7, 1),
+        (1, 2)
+    ]
+
+    tree_count_product = 1
+
+    for slope in slopes:
+        pos = 0
+        tree_count = 0
+        step_r = slope[0]
+        step_d = slope[1]
+        for row in tree_map[::step_d]:
+            if row[pos] == '#':
+                tree_count += 1
+            pos = (pos + step_r) % num_cols
+        print(f'Number of trees: {tree_count}')
+        tree_count_product *= tree_count   
+
+    print(f"Answer: {tree_count_product}")
+
+
+part_1()
+part_2()
