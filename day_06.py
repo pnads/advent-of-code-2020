@@ -119,4 +119,12 @@ What is the sum of those counts?
 # with open('input_files/input_day_06.txt', 'r') as f:
 #     groups = f.read().split("\n\n")
 
-# for group in groups:
+
+# Sandy again:
+from functools import reduce
+import string
+
+def part2():
+    with open('input_files/input_day_06.txt', 'r') as input: print(sum(len(reduce(lambda sofar, next_answers: sofar.intersection(set(next_answers)), group.strip().split('\n'), set(string.ascii_lowercase))) for group in input.read().split('\n\n')))
+
+part2()
