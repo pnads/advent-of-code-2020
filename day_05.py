@@ -100,3 +100,21 @@ def part2():
     print(f'My Seat ID == {my_seat}')
 
 part2()
+
+# lines = boarding_passes
+
+# max_id = decode_seat_id('RRRRRRRBBB')
+# min_id = decode_seat_id('LLLLLLLFFF')
+# seats = dict(zip(range(min_id, max_id), [False] * (max_id-min_id)))
+# for line in lines:
+#     seats[decode_seat_id(line)] = True
+
+# empty_seats = (seat for seat in seats.items() if not seat[1])
+# last_seat = next(empty_seats)
+# for seat in empty_seats:
+#     if seat[0] == last_seat[0] + 1:
+#         print(seat)
+#         last_seat = seat
+#         continue
+#     print(f'Missing Seat = {seat[0]}')
+#     break
