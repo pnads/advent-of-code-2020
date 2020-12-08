@@ -81,7 +81,7 @@ def run(df):
     index_to_go_to = 0
     visited_twice = False
     visit_order = 0
-    # print(visited_twice)
+
     while not visited_twice and visit_order < df_test.shape[0]:
         df_test.loc[index_to_go_to, 'order'] = visit_order
         cmd = df_test.loc[index_to_go_to, 'command']
@@ -89,7 +89,6 @@ def run(df):
         
         df_test.loc[index_to_go_to, 'times_visited'] += 1
         if df_test.loc[index_to_go_to, 'times_visited'] == 2:
-            # print('BREAKING LOOP')
             visited_twice = True
             break
 
@@ -111,7 +110,6 @@ def part1():
     _, accumulator = run(df)
     
     print(f'Part 1 | Accumulator: {accumulator}')
-    # 1594
 
 """--- Part Two ---
 After some careful analysis, you believe that exactly one instruction is 
@@ -180,5 +178,5 @@ def part2():
             break
 
 
-part1()
-part2()
+part1() #1594
+part2() #758
