@@ -70,32 +70,48 @@ with open('input_files/input_day_08.txt', 'r') as f:
 
 boot_code = [[code[0], int(code[1])] for code in boot_code]
 
-ACCUMULATOR = 0
-
 df = pd.DataFrame(boot_code, columns=['command', 'value'])
 df['times_visited'] = 0
+df['order'] = 0
 
-index_to_go_to = 0
-program_restarted = False
-while not program_restarted:
-    cmd = df.loc[index_to_go_to, 'command']
-    val = df.loc[index_to_go_to, 'value']
+
+def run(df):
+    df_test = df.copy(deep=True)
+    accumulator = 0
+    index_to_go_to = 0
+    visited_twice = False
+    visit_order = 0
+    # print(visited_twice)
+    while not visited_twice and visit_order < df_test.shape[0]:
+        df_test.loc[index_to_go_to, 'order'] = visit_order
+        cmd = df_test.loc[index_to_go_to, 'command']
+        val = df_test.loc[index_to_go_to, 'value']
+        
+        df_test.loc[index_to_go_to, 'times_visited'] += 1
+        if df_test.loc[index_to_go_to, 'times_visited'] == 2:
+            # print('BREAKING LOOP')
+            visited_twice = True
+            break
+
+        if cmd == 'acc':
+            accumulator += val
+            index_to_go_to += 1
+        elif cmd == 'jmp':
+            index_to_go_to += val
+        elif cmd == 'nop':
+            index_to_go_to += 1
+
+        visit_order += 1
+
+    return visited_twice, accumulator
+
+
+def part1():
     
-    df.loc[index_to_go_to, 'times_visited'] += 1
-    if df.loc[index_to_go_to, 'times_visited'] == 2:
-        program_restarted = True
-        break
-
-    if cmd == 'acc':
-        ACCUMULATOR += val
-        index_to_go_to += 1
-    elif cmd == 'jmp':
-        index_to_go_to += val
-    elif cmd == 'nop':
-        index_to_go_to += 1
-
-print(ACCUMULATOR)
-# 1594
+    _, accumulator = run(df)
+    
+    print(f'Part 1 | Accumulator: {accumulator}')
+    # 1594
 
 """--- Part Two ---
 After some careful analysis, you believe that exactly one instruction is 
@@ -146,4 +162,23 @@ Fix the program so that it terminates normally by changing exactly one jmp (to
 nop) or nop (to jmp). What is the value of the accumulator after the program 
 terminates?
 """
+def part2():
 
+    df_subset = df.loc[df.command.isin(['nop', 'jmp'])].copy(deep=True)
+
+    for row in df_subset.itertuples():
+        df_test = df.copy(deep=True)
+        if row.command == 'nop':
+            df_test.at[row.Index, 'command'] = 'jmp'
+        elif row.command == 'jmp':
+            df_test.at[row.Index, 'command'] = 'nop'
+
+        visited_twice, accumulator = run(df_test)
+
+        if not visited_twice:
+            print(f'Part 2 | Accumulator: {accumulator}')
+            break
+
+
+part1()
+part2()
